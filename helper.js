@@ -33,66 +33,48 @@
  */
 ssaHelper = function(kind){
     var express = require('express'),request = require('request')
-    
     , self = this;
     nodes = require('./nodes.json');
-   
     self.populateCache = function() {
         if (typeof self.zcache === "undefined") {
-        	// set these up to download ?? create master 'file list' parameter that has urls and save file name/paths
-            self.zcache = {};
+        	self.zcache = {};
             self.ztime = {};
 		}
     };
-
     self.cache_get = function(key,timeout) {
         return (typeof self.zcache[key] != 'undefined'? (typeof timeout != 'undefined' ? ( (self.ztime[key] +timeout)  < Math.round((new Date()).getTime() / 1000)  ?false : self.zcache[key]) : self.zcache[key]) : false);
     };
-    
     self.cache_put = function(key,value){
         self.ztime[key] = parseInt(Math.round((new Date()).getTime() / 1000));
         self.zcache[key] = value;
         return true;
     };
-    
     self.requester = function (url,callback){
         request(url,function(error,response,body){
             return (typeof response != 'undefined' && response.statusCode == 200?(typeof body != 'undefined' ? callback(JSON.parse(body)) : (typeof error != 'undefined'?callback(error) : callback(false))) :callback(false));
                 });
     }
-    
     self.setupVariables = function() {
-   
         //  Set the environment variables we need.
         self.ipaddress = process.env.OPENSHIFT_INTERNAL_IP;
         
         if(typeof nodes['local']['_ports'][kind] != 'undefined'){
-        // how do we determine what this is... hmmm.. make sure kind exists or return error...
             self.port      = process.env.OPENSHIFT_INTERNAL_PORT || nodes['local']['_ports'][kind];
         }else{
             console.log('The kind passed to this server does not exist in nodes.json, please check your ssaHelper() construction call');
             // exit
         }
         if (typeof self.ipaddress === "undefined") {
-            //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
-            //  allows us to run/test the app locally.
             console.warn('No OPENSHIFT_INTERNAL_IP var, using ' + nodes['local']['ipaddress']);
             self.ipaddress = nodes['local']['ipaddress'];
-            // build urls?
             nodes = nodes['local'];
-            
         }else{
             // assemble openshift variables...
             var segmentUrl = 'http://segment-' + nodes['openshift']['oDomain'] +'.'+ nodes['_cDomain'] ;
             var ridesUrl = 'http://rides-' + nodes['openshift']['oDomain'] +'.'+ nodes['_cDomain'];
             nodes["segment"] = segmentUrl;
             nodes["rides"] =  ridesUrl;
-
-            //nodes = nodes['openshift'];
         }
-        console.log(nodes);
-        // clean up nodes array
-        
     };
     self.terminator = function(sig){
         if (typeof sig === "string") {
@@ -103,7 +85,6 @@ ssaHelper = function(kind){
         }
         console.log('%s: Node server stopped.', Date(Date.now()) );
     };
-
     self.setupTerminationHandlers = function(){
         process.on('exit', function() { self.terminator(); });
         ['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGILL', 'SIGTRAP', 'SIGABRT',
@@ -112,8 +93,6 @@ ssaHelper = function(kind){
             process.on(element, function() { self.terminator(element); });
         });
     };
-     
-    
     self.initializeServer = function() {
         self.createRoutes();
         self.app = express();

@@ -84,11 +84,7 @@ helper.createRoutes = function() {
                             var r = [];
                             for(var i = 0;i<body.length;i++)
                                 r.push(body[i]['id']);
-                            
-                            //self.zcache[athlete_vanity+rides_offset] = r;
-                            // go ahead and fetch ride/id
-                            //if(!ride_cache_check || typeof rides_cache_check == 'undefined'){
-                            
+                     
                                 /* start looking up ride efforts.. probably NOT internally to avoid the connection implication
                                  * calls them directly from strava ... probably need to depreciate the ride/:id
                                  */
@@ -103,85 +99,51 @@ helper.createRoutes = function() {
                                             if(typeof body != 'undefined' && body != false && typeof body['efforts'] == 'undefined')
                                                 res.send(404,{"error":"Ride not found"});
                                             else if(body['efforts'] != "no efforts"){
-                                                var result = {};
-                                                //console.log(body);
-                                                var ride_id = body['ride']['id'];
+                                                var result = {},ride_id = body['ride']['id'];
                                                 body = body['efforts'];
-                                                //console.log(body.length);
                                                 if(typeof body != 'undefined'){
-                                                    if(body.length > 0){
+                                                    if(body.length > 0)
                                                         for(var i=0;i<body.length;i++){
-                                                            var effort = body[i];
-                                                            var segment_effort = effort['segment'];
+                                                            var effort = body[i],segment_effort = effort['segment'];
                                                             result[segment_effort['id']]= effort['elapsed_time'];
                                                         }
-                                                    }
-                                                    else{
+                                                    else
                                                     // add this for loop reporting ... ride had no efforts
                                                         result = {"efforts":"no efforts"};
-                                                    }
                                                     self.cache_put('e'+ride_id,result);
-                                                    
                                                 }else
                                                     res.send(404,{"error":"Ride not found"});
-                                                
                                             }
-                                            
                                             ride_efforts.push((typeof result != 'undefined'?result:0));
-                                            
                                             // combine a 'blank' entry for final processing call counts to match
                                             if(ride_efforts.length == r.length){
                                                 var segments_list = [];
                                                 ride_efforts.filter(function(arr,index){
                                                     if(typeof arr == 'object'){
-                                                       // console.log(Object.keys(arr));
                                                         var segment_ids = Object.keys(arr);
                                                         if(segment_ids.length > 0)
-                                                        // attempt to force integers here.. storing keys as strings and adding a lot of 'extra data'
                                                             segments_list = segments_list.concat(Object.keys(arr));
-                                                      //  else
-                                                     //       console.log('ride has no efforts');
                                                     }
-                                                    // we dont really need the time do we ??
                                                 });
-                                                // only stores segment id's, returns array with string values of segment id's
-                                                
-                                                // add a count so we know when to stop incrementing
-                                                // when checking for updates simply just reget all the efforts for each
-                                                // offset and compare and add additional segments when present or replace entire object?
                                                 segments_list.unshift(rides_count);
-                                                //self.cache_put(athlete_vanity+rides_offset,segments_list);
                                                 self.cache_put(athlete_vanity+rides_offset,segments_list);
                                                 res.send(segments_list);
                                             }
                                         });
                                     }else{
                                         var result = ride_cache_check;
-
                                         ride_efforts.push((typeof result != 'undefined'?result:0));
-                                            
                                             // combine a 'blank' entry for final processing call counts to match
                                             if(ride_efforts.length == r.length){
                                                 var segments_list = [];
                                                 ride_efforts.filter(function(arr,index){
                                                     if(typeof arr == 'object'){
-                                                       // console.log(Object.keys(arr));
                                                         var segment_ids = Object.keys(arr);
                                                         if(segment_ids.length > 0)
-                                                        // attempt to force integers here.. storing keys as strings and adding a lot of 'extra data'
                                                             segments_list = segments_list.concat(Object.keys(arr));
-                                                        //else
-                                                         //   console.log('ride has no efforts');
                                                     }
-                                                    // we dont really need the time do we ??
                                                 });
-                                                // only stores segment id's, returns array with string values of segment id's
-                                                
-                                                // add a count so we know when to stop incrementing
-                                                // when checking for updates simply just reget all the efforts for each
-                                                // offset and compare and add additional segments when present or replace entire object?
                                                 segments_list.unshift(rides_count);
-                                                //self.zcache[athlete_vanity+rides_offset] = segments_list;
                                                 res.send(segments_list);
                                             }
                                     }
