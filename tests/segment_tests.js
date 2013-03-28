@@ -27,8 +27,9 @@ require('./assertions.js');
 var
     validAthleteId = '200159',
     invalidAthleteId = 'alsdjlkj',
-    validClub = 'sffixed',
-    invalidClub = 'alskjbjjvjvjv';
+    validClub = '3346';
+    invalidClub = 'sffixed',
+//    invalidClub = 'alskjbjjvjvjv';
     validSegmentId = '610649',
         invalidSegmentId = 'vvvasgts',
 
@@ -58,7 +59,10 @@ request(nodes['segment'] + rank_endpoint + invalidSegmentId + '/' + validAthlete
 // missing params
 request(nodes['segment'] + rank_endpoint + validSegmentId + '/' ,failAssert);
 
-request(nodes['segment'] + crank_endpoint + validSegmentId + '/' + invalidAthleteId + '/' + validClub,failAssert);
+// crank endpoints
+request(nodes['segment'] + crank_endpoint + validSegmentId + '/' + validAthleteId + '/' + validClub,okAssert);
 
+// invalid id or athlete does not belong to club
+request(nodes['segment'] + crank_endpoint + validSegmentId + '/' + invalidAthleteId + '/' + validClub,notContainedAssert);
 
 request(nodes['segment'],failAssert);
