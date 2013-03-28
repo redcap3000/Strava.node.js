@@ -12,40 +12,14 @@
     
 */
 
-var assert = require('assert'),request = require('request'),nodes = require('../nodes.json')
-    validAthlete = 'rbarbachano',
+require('./assertions.js');
+var validAthlete = 'rbarbachano',
     invalidAthlete = 'alsdjlkj',
     validOffset = 0,
     athlete_endpoint = '/athlete/',
     rides_endpoint = '/rides/',
     invalid_endpoint = '/mah/';
 
-nodes = nodes['local'];
-
-var okAssert = function(error,response,body){
-// error should be null?
-    assert.notEqual(error,true,'\n\n **FAIL Error encountered in returned request');
-    assert.equal(response.statusCode,200,'\n\n **FAIL \n\n response.statusCode is not 200 \n\n');
-    assert.ok(body,'\n\n **FAIL \n\n Returned invalid BODY from request');
-    
-    
-    if(typeof response == 'object'){
-        console.log('\n**okAssert Passed**\t length:' + Object.keys(response).length);
-
-    }else if(response == 'array'){
-        console.log('\n**okAssert Passed**\t length:' + response.length);
-
-    }else{
-        console.log('\n**okAssert Passed**');
-    }
-}
-
-// make sure specific values (invalid) return 404
-var failAssert = function(error,response,body){
-    //assert.ok(error,'\n\n **FAIL in failAssert - error was NOT encountered.')
-    assert.notEqual(response.statusCode,200,'\n\n **FAIL in failAssert - response.statusCode was equal to 200.');
-    console.log('\n**failAssert Passed**')
-}
 // check if server is running
 request(nodes['rides'] + '/health/',okAssert);
 
@@ -73,4 +47,8 @@ request(nodes['rides'] + athlete_endpoint + invalidAthlete ,failAssert);
 // missing params
 request(nodes['rides'] + athlete_endpoint,failAssert);
 
+// invalid endpoint
 request(nodes['rides'],failAssert);
+
+// invalid endpoint
+request(nodes['rides'] + invalid_endpoint,failAssert);
