@@ -67,10 +67,11 @@ helper.createRoutes = function() {
                     });
                 };
                 
-        } 
+        }
+        
         self.routes['/rides/:athlete/:offset'] = function(req, res) {
             // step one get the club id then use another request/api call to get the club data
-            var athlete_vanity = req.params.athlete, rides_offset = req.params.offset,cache_check = self.cache_get(athlete_vanity+rides_offset,60*60*1);
+            var athlete_vanity = req.params.athlete, rides_offset = req.params.offset,cache_check = self.cache_get(athlete_vanity+rides_offset,self.getTO( 'athlete+rides_offset',60*60*1));
             if(cache_check){
                 res.send(cache_check);
                 }
@@ -91,7 +92,8 @@ helper.createRoutes = function() {
                                 var ride_efforts = [];
                                 for(var i = 0; i< r.length;i++){
                                     // check for new ride efforts every week ... maybe do something to compare the old ones (notify which are new ?)
-                                    var ride_cache_check = self.cache_get('e'+r[i],60*60*24*7);
+                                    // ONE WEEK
+                                    var ride_cache_check = self.cache_get('e'+r[i],self.getTO('efforts_timeout', 275200  ));
                                     if(!ride_cache_check || typeof ride_cache_check == 'undefined'){
                                         var url = 'http://www.strava.com/api/v1/rides/' +r[i] + '/efforts';
                                         self.requester(url,

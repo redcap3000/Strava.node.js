@@ -207,7 +207,8 @@ helper.createRoutes = function() {
                         console.log('in finalOutput != undefined');
                         res.end(res.send('strava={segments:' + JSON.stringify(finalOutput) + '}'));
                     }else{
-                        res.end(res.send('<h1>Problem with athlete vanity lookup</h1>'));
+                        self.sendAlert('Problem with athlete vanity lookup',res);
+//                        res.end(res.send('<h1>Problem with athlete vanity lookup</h1>'));
                     }
             }
         };
@@ -243,7 +244,7 @@ helper.createRoutes = function() {
                                         athleteId = body['id'];
                                         if(typeof club_id != 'undefined'){
                                             // update every 8 hours?
-                                            var clubMemberCheck = self.cache_get('m_'+club_id,60*60*8);
+                                            var clubMemberCheck = self.cache_get('m_'+club_id,self.getTO('club_members',60*60*8));
                                             if(clubMemberCheck == false)
                                                 self.requester('http://www.strava.com/api/v1/clubs/'+ club_id + '/members',
                                                     function(body){

@@ -2,7 +2,8 @@
             "ipaddress" : "192.168.0.198",
             "segment" : "http://192.168.0.198:8081",
             "rides" : "http://192.168.0.198:8082",
-            "_ports" : {"ipaddress" : 8080, "segment": 8081,"rides":8082}
+            "_ports" : {"ipaddress" : 8080, "segment": 8081,"rides":8082},
+            "_timeouts" : {"athlete+rides_offset":3600,"efforts_timeout":25200,"club_segment":3600,"segment":1800}
         },
         "openshift":
         {

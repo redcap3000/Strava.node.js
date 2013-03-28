@@ -12,6 +12,11 @@
  *  Adds value to self.zcache[key] and adds 
  *  a unix timestamp representation of Date().getTime() to self.ztime[key]
  *
+ *  getTO(key<string>,toDefault<integer>)
+ *
+ *  Refers to nodes.json to get an timeout (integer) for a provided key contained within nodes._timeouts.<key>
+ *  If toDefault is defined and the value is not found within nodes it will return that value.
+ *
  *  requester(url<string>,callback<function>)
  *
  *  A helper function for request npm module to assist with error control, 
@@ -49,6 +54,13 @@ ssaHelper = function(kind){
         self.zcache[key] = value;
         return true;
     };
+    
+    self.getTO= function(key,toDefault){
+    // looks inside of nodes for the timeout value if it exists, otherwise returns the passed default
+    // zero value should be ok to use.. disables cache. allow to specify different timeouts per each env.
+        if(typeof toDefault == 'undefined') toDefault = 0;
+        return (typeof nodes['_timeouts'] != 'undefined' && typeof nodes['_timeouts'][key] != 'undefined' ? nodes['_timeouts'][key] : toDefault);
+    }
     self.requester = function (url,callback){
         request(url,function(error,response,body){
             return (typeof response != 'undefined' && response.statusCode == 200?(typeof body != 'undefined' ? callback(JSON.parse(body)) : (typeof error != 'undefined'?callback(error) : callback(false))) :callback(false));

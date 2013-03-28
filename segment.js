@@ -53,7 +53,7 @@ helper.createRoutes = function() {
             function(req, res) {
                 var segment_id = req.params.id,
                 athlete_id = req.params.athlete_id,
-                club_id = req.params.club_id,cache_check = (club_id != null && club_id != '' && typeof club_id != 'undefined'? self.cache_get(segment_id+'r'+club_id,60*5):   self.cache_get(segment_id+'r',60*5)),
+                club_id = req.params.club_id,cache_check = (club_id != null && club_id != '' && typeof club_id != 'undefined'? self.cache_get(segment_id+'r'+club_id,self.getTO('club_segment',60*30)):   self.cache_get(segment_id+'r',self.getTO('segment',60*15))),
                 competitionComp =
                     function(final,athlete_present){
                           var numberToSmallTime = function(seconds){
