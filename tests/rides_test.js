@@ -12,7 +12,7 @@
     
 */
 
-var assert = require('assert'),request = require('request'),nodes = require('./nodes.json')
+var assert = require('assert'),request = require('request'),nodes = require('../nodes.json')
     validAthlete = 'rbarbachano',
     invalidAthlete = 'alsdjlkj',
     validOffset = 0,
