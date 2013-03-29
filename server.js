@@ -25,7 +25,7 @@
 */
 
 
-var h =require('./helper.js'),
+require('./helper.js'),
 // make new node, and assign it the port associated with 'ipaddress' in nodes.json (for running locally)
 helper = new ssaHelper('ipaddress');
 
@@ -35,55 +35,6 @@ helper.createRoutes = function() {
     self.routes['/health'] = function(req, res) {
         res.send('1');
     };
-    /*
-     *  sendAlert(msg<mixed>,res)
-     *      Writes javascript that triggers an alert in the response.
-     *  sendOptions(msg<mixed>,res)
-     *      Writes options (one at a time) to screen using client side script 'docWrite' (below)
-     
-     
-                function docWrite(data,append,target_id){
-                    if(typeof target_id == 'undefined')
-                        target_id = 'load_msg';
-                    if(typeof append == 'undefined' || append == true)
-                        document.getElementById(target_id).innerHTML += data;
-                    else {
-                        document.getElementById(target_id).innerHTML = data;
-                    }	
-                }
-     
-     
-     *   res refers to the express js object that manages the output buffer.
-     *   These functions depend on the structure that exists within index.html, customization would need to happen
-     *   to support other types of structures. This was designed to work within a jquery's 'getScript' call.
-     
-     *   These are ONLY called if 'something' happens. Otherwise an object is returned as a javascript variable.
-     */
-    
-    self.sendAlert = function(msg,res){
-    // sends an alert and extra stuff to hide the search query etc
-         res.send('document.getElementById("strava_lookup").style.display = "block"; document.getElementById("progress_bar").style.display = "none";docWrite("",false);alert(\''+msg+'\');');
-         res.end();
-    }
-    self.sendOptions = function(msg,res){
-        function addSlashes( str ) {
-        return (str+'').replace(/([\\"'])/g, "\\$1").replace(/\0/g, "\\0");
-        }
-        res.write('document.getElementById("progress_bar").style.display = "none";');
-        var final = '';
-        if(typeof msg == 'object'){
-            if(msg.length > 0){
-                 res.write('docWrite( "<h3>Did you mean...?</h3><ul>",false);');
-                 msg.filter(function(arr,index){var name = addSlashes(arr);res.write('docWrite(\''+'<li><a href="?athlete=' + athlete +'&club='+name+'">'+name+'</a></li>'+'\');')});
-                 res.write('docWrite(\'</ul>\');document.getElementById("strava_lookup").style.display = "block";');
-            }else
-                res.write('document.getElementById("progress_bar").style.display = "none";document.getElementById("strava_lookup").style.display = "block";docWrite("",false);alert( "Could not find any matching clubs.");')
-        }else{
-            final = msg;
-           res.write('document.getElementById("progress_bar").style.display = "none";document.getElementById("strava_lookup").style.display = "block";docWrite("'+msg+'");')
-        }
-         res.end();
-    }
    /*
     *
     * Begin a lookup for a :club_name filter on an :athlete
@@ -105,13 +56,12 @@ helper.createRoutes = function() {
                     }else{
                         // ask user to 'be more specific' ?
                         var result = [];
-                        body.filter(function(arr,index){result.push( arr.name);});
+                        //body.filter(function(arr,index){result.push( arr.name);});
                         club_id = undefined;
-                        self.sendOptions(result,res);
+                        res.send({error:"Club name ambigious"});
                     }
             }else{
                 club_id = undefined;
-                res.send('alert("Term did not match any teams.");');
                 res.send({error:"No Matching teams"});
             }
         });
@@ -131,7 +81,7 @@ helper.createRoutes = function() {
             club_name = undefined;
         }
         if(athlete_vanity == '' || typeof athlete_vanity == 'undefined'){
-            self.sendAlert('Please provide athlete vanity',res);
+            res.send({error:"Please provide Athlete Vanity"});
         }else{
             var base_url = nodes.rides + '/ride', total_time= 0, rides_offset = 0, r = [], bLength = 0, bCounter = 0, aCounter = 0, aCounterStop = 0,final = false,timeout = false,
             render = false,
@@ -194,10 +144,11 @@ helper.createRoutes = function() {
                                           [ 1, '-02:31', 1 ],   [ 3, '-00:05', 1 ], [ 5, '+00:34', 1 ] ]
                                         */
                                         var name = arr[0], dist = arr[1], grade = arr[2], cat = arr[3],segment_id = arr[4],rank = arr[5],best_time = arr[6];
+                                        
                                         finalOutput.push([segment_id,rank,seg_history[segment_id],name,dist,grade,cat,best_time,arr[7],arr[8],arr[9]]);
                                        });
                                         var segRanksLength = segRanks.length;
-                                        res.end(res.send('strava={segments:' + JSON.stringify(finalOutput) + '}'));
+                                        res.send('strava={segments:' + JSON.stringify(finalOutput) + '}');
                                     }
                                 });
                             }
@@ -205,10 +156,9 @@ helper.createRoutes = function() {
                     }else if(typeof finalOutput != 'undefined'){
                         // do different....
                         console.log('in finalOutput != undefined');
-                        res.end(res.send('strava={segments:' + JSON.stringify(finalOutput) + '}'));
+                        res.send('strava={segments:' + JSON.stringify(finalOutput) + '}');
                     }else{
-                        self.sendAlert('Problem with athlete vanity lookup',res);
-//                        res.end(res.send('<h1>Problem with athlete vanity lookup</h1>'));
+                        res.send({error:"Problem with athlete vanity lookup"});
                     }
             }
         };
@@ -256,18 +206,18 @@ helper.createRoutes = function() {
                                                             // return list of other members to do a 'voyer view'
                                                             self.cache_put('m_' + club_id, clubMembers);
                                                             if(clubMembers.indexOf(athleteId) == -1)
-                                                                self.sendAlert('Athlete is not a member of team',res);
+                                                                res.send({error:'Athlete is not a member of team'});
                                                             else
                                                             // build links to go to other athletes, in team?
                                                                 self.requester(base_url +'s/'+athlete_vanity+'/'+rides_offset,self.segmentRequest);
                                                         }else
-                                                            res.sendAlert('Cannot Communicate with strava',res);
+                                                            res.send({error:'Cannot Communicate with strava'});
                                                     }
                                                 );
                                             else if(clubMemberCheck.indexOf(athleteId) == -1){
                                                 //console.log('athlete does not belong to club');
                                                 club_id = undefined;
-                                                self.sendAlert('Athlete is not a member of team',res);
+                                                res.send({error:'Athlete is not a member of team'});
                                             }else{
                                                 if(typeof req.params.club_name == 'undefined')
                                                     club_id = undefined;
@@ -280,7 +230,7 @@ helper.createRoutes = function() {
                                 }
                             else{
                             console.log(nodes);
-                                self.sendAlert('Athlete Not Found',res);
+                                res.send({error:'Athlete Not Found'});
                             }
                         });
             }else{
