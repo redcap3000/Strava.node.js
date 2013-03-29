@@ -1,10 +1,13 @@
-Strava.node.js
-=================
-**Ronaldo Barbachano (redcapmedia.com) March. 2013**
+#Strava.node.js
+
+
+###**[Ronaldo Barbachano](http://redcapmedia.com)**
+
+####**March. 2013**
 
 > Distributed Node.js implementation of Strava.com api for personalized segment analytics using express.js deployable with Openshift.
 
-# **Intention**
+##**Intention**
 =================
 
 I wanted to allow this to be a **turn key** solution to interacting with the strava API in a distributed manner. 
@@ -60,7 +63,7 @@ Once you have your redhat openshift account, you can fill in your details in nod
 In addition modification of the nodes.json file can allow you to specify ports to run the node scripts in your local environment quickly. Launch each script and begin using the api. Each script has detail instructions for use. Every script returns a json response, except for 'server.js', more details are contained in each file.
 
 
-###**Testing**
+##**Testing**
 =================
 Testing is somewhat simple, for the time being and is dependent on the assert module. Run the scripts  inside of 'tests' ending with _test while the associated scripts are running (locally). They test API endpoints with http requests for appropriate reponses and inappropriate responses; mostly dependent on returned status codes.
 	
