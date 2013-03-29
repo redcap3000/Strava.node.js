@@ -58,7 +58,7 @@ This repo will modify the way the Strava API data streams appear and generally f
 
 If you don't have a redhat openshift account I highly recommmend you get one, they're free, and this repository is designed to run all nodes with very little configuration. 
 
-Once you have your redhat openshift account, you can fill in your details in nodes.json, and make modifications to the package.json to specify the 'runtime' script (normally server.js). Each keyname inside of 'local' (associated with a URL) will be used to assemble as url when deploying to openshift.
+Once you have your redhat openshift account, you can fill in your details in nodes.json, and make modifications to the package.json to specify the 'runtime' script (normally server.js). Each keyname inside of 'local' (associated with a URL) will be used to assemble as a url when deploying to openshift.
 
 In addition modification of the nodes.json file can allow you to specify ports to run the node scripts in your local environment quickly. Launch each script and begin using the api. Each script has detail instructions for use. Every script returns a json response, except for 'server.js', more details are contained in each file.
 
