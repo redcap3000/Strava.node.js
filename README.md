@@ -96,11 +96,11 @@ Once you provide your openshift's account domain (nodes.openshift._oDomain), you
 	 
 	server.js		- 	http://<you pick>-<myappDomain>.rhcloud.com/
 	
-	package.json	-
+					package.json	-
 	
-					{ ..
-						"main": "server.js" 
-					}	
+									{ ..
+										"main": "server.js" 
+									}	
 					
 	/* 
 	 *  Supporting servers that talk to strava and server.js
@@ -109,18 +109,18 @@ Once you provide your openshift's account domain (nodes.openshift._oDomain), you
 	
 	segment.js		-	http://segment-<myappDomain>.rhcloud.com/
 	
-	package.json	-
-					{ ..
-						"main": "segment.js" 
-					}	
+					package.json	-
+									{ ..
+										"main": "segment.js" 
+									}	
 	
 	
 	rides.js		-	http://rides-<myappDomain>.rhcloud.com/
 	
-	package.json	-
-					{ ..
-						"main": "rides.js" 
-					}	
+					package.json	-
+									{ ..
+										"main": "rides.js" 
+									}	
 	
 	
 
