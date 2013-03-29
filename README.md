@@ -14,7 +14,7 @@ I wanted to allow this to be a **turn key** solution to interacting with the str
 =================
 Each major endpoint in the strava API (v1) is covered, and some endpoints have been combined into one (ex: the rides call returns the efforts_ids contained within the rides (instead of the ride ID's)). This just happened to fit into my flow better. Also I've removed all of the key value names and use enumerated arrays whenever possible to take advantage of array filters. 
 
-This script will provide you with a way to walk a users' all of a users rides, efforts, and potentially segment data. It also provides an interactive club name selector.
+This script will provide you with a way to walk a users' all of a users rides, efforts, and potentially segment data.
 
 ###Ranking
 
@@ -22,7 +22,7 @@ Only the top 50 ranks in a given segment are calculated, but users may filter th
 
 ###BYO Database
 
-This repo does not come with a database store, but instead keeps all values in memory using helper functions cache_get(<key>,<timeout>optional) and cache_put(<key>,<value>). In the future I may add support for at least Mongo using Mongoose and possibly Redis, but this will more than likely be implemented in a 'plugin' type of setup that will simply modify cache_get/put to use any desired data store.
+This repo does not come with a database store, but instead keeps all values in memory using helper functions **cache_get**(key,timeout-optional) and **cache_put**(key,value). In the future I may add support for at least **Mongo using Mongoose and possibly Redis**, but this will more than likely be implemented in a 'plugin' type of setup that will simply modify cache_get/put to use any desired data store.
 
 ###Strava API/Endpoint Modifications
 
