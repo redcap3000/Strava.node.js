@@ -5,7 +5,7 @@
 
 ####**March. 2013**
 
-> Distributed Node.js implementation of Strava.com api for personalized segment analytics using express.js deployable with Openshift.
+> Distributed Node.js implementation of [Strava.com](http://strava.com) api for personalized segment analytics using express.js deployable with [Openshift](http://www.openshift.com).
 
 ##**Intention**
 =================
@@ -15,7 +15,7 @@ I wanted to allow this to be a **turn key** solution to interacting with the str
 
 ##**What This Does**
 =================
-Each major endpoint in the strava API (v1) is covered, and some endpoints have been combined into one (ex: the rides call returns the efforts_ids contained within the rides (instead of the ride ID's)). This just happened to fit into my flow better. Also I've removed all of the key value names and use enumerated arrays whenever possible to take advantage of array filters. 
+Each major endpoint in the [Strava API (v1)](https://stravasite-main.pbworks.com/w/page/51754105/Strava%20API%20Overview) related to rides, segments, and segment efforts (including clubs) is covered, and some endpoints have been combined into one (ex: the rides call returns the efforts_ids contained within the rides (instead of the ride ID's)). This just happened to fit into my flow better. Also I've removed all of the key value names and use enumerated arrays whenever possible to take advantage of array filters. 
 
 This script will provide you with a way to walk a users' all of a users rides, efforts, and potentially segment data.
 
@@ -56,7 +56,7 @@ This repo will modify the way the Strava API data streams appear and generally f
 ###**redhat openshift**
 =================
 
-If you don't have a redhat openshift account I highly recommmend you get one, they're free, and this repository is designed to run all nodes with very little configuration. 
+If you don't have a **[redhat openshift](https://www.openshift.com)** account I highly recommmend you get one, they're free, and this repository is designed to run all nodes with very little configuration. 
 
 Once you have your redhat openshift account, you can fill in your details in nodes.json, and make modifications to the package.json to specify the 'runtime' script (normally server.js). Each keyname inside of 'local' (associated with a URL) will be used to assemble as a url when deploying to openshift.
 
