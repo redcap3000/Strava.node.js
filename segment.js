@@ -26,7 +26,7 @@
     
 */
 
-var h =require('./helper.js');
+require('./helper.js');
 
 helper = new ssaHelper('segment');
 
@@ -36,11 +36,9 @@ helper = new ssaHelper('segment');
  * external node url's when running in the cloud.
  */
 
-
 helper.createRoutes = function() {
         var self = this;
         self.routes = { };
-
         // Routes for /health, /asciimo and /
         self.routes['/health'] = function(req, res) {
             res.send('1');
@@ -58,11 +56,10 @@ helper.createRoutes = function() {
                     function(final,athlete_present){
                           var numberToSmallTime = function(seconds){
                             var absolute = Math.abs(seconds);
-                            if(absolute < 90){
+                            if(absolute < 90)
                                 return (absolute != seconds ?'-':'+')+'00:' + (absolute<10?'0' :'')+absolute ;
-                            }else{
-                                var fSeconds = absolute % 60;
-                                var fMin = absolute/60;
+                            else{
+                                var fSeconds = absolute % 60, fMin = absolute/60;
                                 fMin = fMin.toFixed(0);
                                 return  (absolute != seconds?'-':'+')+(fMin<10?'0':'')+fMin + (fSeconds != 0?':'+ (fSeconds < 10 ? '0':'') + fSeconds:'');
                             }
@@ -106,8 +103,7 @@ helper.createRoutes = function() {
                             }
                         });
                        // add segment data
-                       var segment_id = athlete_present[0];
-                        var cache_check = self.cache_get('i'+segment_id);
+                       var segment_id = athlete_present[0],cache_check = self.cache_get('i'+segment_id);
                         if(cache_check){
                             result = cache_check;
                             athlete_present.unshift(result[3]);
@@ -139,14 +135,13 @@ helper.createRoutes = function() {
                 if(cache_check){
                     var present = false;
                     // want to make sure the user is within the cache ???
-                    for(var v =0; v < cache_check.length;v++){
+                    for(var v =0; v < cache_check.length;v++)
                         if(cache_check[v][1] == athlete_id){
                             present = cache_check[v][0];
                             athlete_present=([segment_id,present,cache_check[v][2]]);
                             // stop looking...
                             v = cache_check.length;
                         }
-                    }
                     if(!present)
                         res.send([segment_id,0]);
                     else
@@ -161,9 +156,7 @@ helper.createRoutes = function() {
                                     counter++;
                         return counter;
                     };
-                    var cacheKey =(typeof club_id != 'undefined'? segment_id + 'r' + club_id : segment_id + 'r');
-                    
-                    var url = (typeof club_id == 'undefined' ? 'http://www.strava.com/api/v1/segments/'+ segment_id+'/efforts?best=true' : url = 'http://www.strava.com/api/v1/segments/'+ segment_id+'/efforts?clubId=' + club_id + '&best=true');
+                    var cacheKey =(typeof club_id != 'undefined'? segment_id + 'r' + club_id : segment_id + 'r'), url = (typeof club_id == 'undefined' ? 'http://www.strava.com/api/v1/segments/'+ segment_id+'/efforts?best=true' :  'http://www.strava.com/api/v1/segments/'+ segment_id+'/efforts?clubId=' + club_id + '&best=true');
                     self.requester(url,
                         function(body){
                             if(body != false && typeof body['efforts'] != 'undefined' )
@@ -183,11 +176,10 @@ helper.createRoutes = function() {
                                     var final = [];
                                     result.filter(function(arr,index){
                                         var rank = self.calcRank(segment_times,arr[1]);
-                                        if(arr[0] == athlete_id){
+                                        if(arr[0] == athlete_id)
                                             // get previous time, and next time ,and possibly their id's..
                                             // if tied count the number of others who the athlete is tied with
                                             athlete_present = [segment_id,rank,arr[1]];
-                                        }
                                         final.push([rank,arr[0],arr[1]]);
                                         // clear out result array...
                                         if(index == result.length -1)
@@ -203,8 +195,7 @@ helper.createRoutes = function() {
                                     res.send(404,{error:'Effort not found'});
                             }
                             else
-                                res.send(404,{error:url});
-                            
+                                res.send(404,{error:"Request failed"});
                         });
                 }
             };

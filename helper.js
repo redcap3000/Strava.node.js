@@ -54,10 +54,7 @@ ssaHelper = function(kind){
         self.zcache[key] = value;
         return true;
     };
-    
     self.getTO= function(key,toDefault){
-    // looks inside of nodes for the timeout value if it exists, otherwise returns the passed default
-    // zero value should be ok to use.. disables cache. allow to specify different timeouts per each env.
         if(typeof toDefault == 'undefined') toDefault = 0;
         return (typeof nodes['_timeouts'] != 'undefined' && typeof nodes['_timeouts'][key] != 'undefined' ? nodes['_timeouts'][key] : toDefault);
     }
@@ -81,13 +78,20 @@ ssaHelper = function(kind){
             self.ipaddress = nodes['local']['ipaddress'];
             nodes = nodes['local'];
         }else{
-            // assemble openshift variables...
+            /*
+             * assemble openshift variables...
+             *
+             */
             var segmentUrl = 'http://segment-' + nodes['openshift']['oDomain'] +'.'+ nodes['_cDomain'] ;
             var ridesUrl = 'http://rides-' + nodes['openshift']['oDomain'] +'.'+ nodes['_cDomain'];
             nodes["segment"] = segmentUrl;
             nodes["rides"] =  ridesUrl;
         }
     };
+    /*
+     *   Boilerplate
+     *
+     */
     self.terminator = function(sig){
         if (typeof sig === "string") {
            

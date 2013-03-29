@@ -22,7 +22,8 @@
     
     
 */
-var h =require('./helper.js');
+
+require('./helper.js');
 
 helper = new ssaHelper('rides');
 
@@ -85,7 +86,6 @@ helper.createRoutes = function() {
                             var r = [];
                             for(var i = 0;i<body.length;i++)
                                 r.push(body[i]['id']);
-                     
                                 /* start looking up ride efforts.. probably NOT internally to avoid the connection implication
                                  * calls them directly from strava ... probably need to depreciate the ride/:id
                                  */
@@ -152,7 +152,7 @@ helper.createRoutes = function() {
                                 }
                         }
                         else
-                            res.end(res.send(404,{"error":"Athlete or athlete rides not found"}));
+                            res.send(404,{"error":"Athlete or athlete rides not found"});
                     });
             }
         };
