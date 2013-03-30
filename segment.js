@@ -49,11 +49,13 @@ helper.createRoutes = function() {
         }
         self.routes['/rank/:id/:athlete_id'] =
             function(req, res) {
-                var segment_id = req.params.id,
+                var segment_id = parseInt(req.params.id),
                 athlete_id = req.params.athlete_id,
                 club_id = req.params.club_id,cache_check = (club_id != null && club_id != '' && typeof club_id != 'undefined'? self.cache_get(segment_id+'r'+club_id,self.getTO('club_segment',60*30)):   self.cache_get(segment_id+'r',self.getTO('segment',60*15))),
                 competitionComp =
                     function(final,athlete_present){
+                        /*
+                            MOVE TO CLIENT SIDE!
                           var numberToSmallTime = function(seconds){
                             var absolute = Math.abs(seconds);
                             if(absolute < 90)
@@ -64,6 +66,7 @@ helper.createRoutes = function() {
                                 return  (absolute != seconds?'-':'+')+(fMin<10?'0':'')+fMin + (fSeconds != 0?':'+ (fSeconds < 10 ? '0':'') + fSeconds:'');
                             }
                         };
+                        */
                          var comp ={}, above=false,below=false,ties=0;
                         // find ties
                         final.filter(function(arr,index){
@@ -98,7 +101,7 @@ helper.createRoutes = function() {
                                     ;
                                 else{
                                     var rank = arr[0],aId = arr[1],time = arr[2],count = arr[3],timeCalc = time - athlete_present[2];
-                                    athlete_present.push([rank,numberToSmallTime(timeCalc),count]);
+                                    athlete_present.push([rank,parseInt(timeCalc),count]);
                                 }
                             }
                         });
@@ -119,7 +122,7 @@ helper.createRoutes = function() {
                                         if(typeof body['segment'] != 'undefined'){
                                             body = body['segment'];
                                             body['distance'] = 0.000621371 * body['distance'];
-                                            var result = [body['name'],parseFloat(body['distance'].toFixed(2)),body['averageGrade'].toFixed(1) + '%', body['climbCategory']];
+                                            var result = [body['name'],parseFloat(body['distance'].toFixed(2)),parseFloat(body['averageGrade'].toFixed(1)), body['climbCategory']];
                                             self.cache_put('i'+segment_id,result);
                                             athlete_present.unshift(result[3]);
                                             athlete_present.unshift(result[2]);

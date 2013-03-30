@@ -123,8 +123,12 @@ helper.createRoutes = function() {
                                                 ride_efforts.filter(function(arr,index){
                                                     if(typeof arr == 'object'){
                                                         var segment_ids = Object.keys(arr);
-                                                        if(segment_ids.length > 0)
-                                                            segments_list = segments_list.concat(Object.keys(arr));
+                                                        if(segment_ids.length > 0){
+                                                            segment_ids.filter(function(arr2){
+                                                                segments_list.push(parseInt(arr2));
+                                                            });
+                                                           // segments_list = segments_list.concat(Object.keys(arr));
+                                                            }
                                                     }
                                                 });
                                                 segments_list.unshift(rides_count);
