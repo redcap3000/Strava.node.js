@@ -1,0 +1,48 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/Cellar/node/0.8.18/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'Stream' ]
+2 info using npm@1.2.2
+3 info using node@v0.8.18
+4 verbose read json /Library/WebServer/Documents/Strava.node.js/package.json
+5 verbose read json /Library/WebServer/Documents/Strava.node.js/node_modules/express/package.json
+6 verbose read json /Library/WebServer/Documents/Strava.node.js/node_modules/request/package.json
+7 verbose from cache /Library/WebServer/Documents/Strava.node.js/package.json
+8 verbose readDependencies using package.json deps
+9 verbose cache add [ 'Stream', null ]
+10 verbose cache add name=undefined spec="Stream" args=["Stream",null]
+11 verbose parsed url { pathname: 'Stream', path: 'Stream', href: 'Stream' }
+12 silly lockFile df063869-Stream Stream
+13 verbose lock Stream /Users/redcap3000/.npm/df063869-Stream.lock
+14 silly lockFile df063869-Stream Stream
+15 verbose addNamed [ 'Stream', '' ]
+16 verbose addNamed [ null, '' ]
+17 silly lockFile 25ddd26f-Stream Stream@
+18 verbose lock Stream@ /Users/redcap3000/.npm/25ddd26f-Stream.lock
+19 silly addNameRange { name: 'Stream', range: '', hasData: false }
+20 verbose url raw Stream
+21 verbose url resolving [ 'https://registry.npmjs.org/', './Stream' ]
+22 verbose url resolved https://registry.npmjs.org/Stream
+23 info trying registry request attempt 1 at 10:54:23
+24 http GET https://registry.npmjs.org/Stream
+25 http 404 https://registry.npmjs.org/Stream
+26 silly registry.get cb [ 404,
+26 silly registry.get   { server: 'CouchDB/1.2.1 (Erlang OTP/R15B03)',
+26 silly registry.get     date: 'Thu, 28 Mar 2013 17:53:47 GMT',
+26 silly registry.get     'content-type': 'application/json',
+26 silly registry.get     'content-length': '52',
+26 silly registry.get     'cache-control': 'must-revalidate' } ]
+27 silly lockFile 25ddd26f-Stream Stream@
+28 error 404 'Stream' is not in the npm registry.
+28 error 404 You should bug the author to publish it
+28 error 404
+28 error 404 Note that you can also install from a
+28 error 404 tarball, folder, or http url, or git url.
+29 error System Darwin 12.3.0
+30 error command "/usr/local/Cellar/node/0.8.18/bin/node" "/usr/local/bin/npm" "install" "Stream"
+31 error cwd /Library/WebServer/Documents/Strava.node.js
+32 error node -v v0.8.18
+33 error npm -v 1.2.2
+34 error code E404
+35 verbose exit [ 1, true ]
