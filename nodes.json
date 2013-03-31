@@ -7,7 +7,7 @@
         },
         "openshift":
         {
-            "_oDomain" : "<your rhcloud domain>",
+            "_oDomain" : "rcsb",
             "_cDomain" : "rhcloud.com"
         }
     }
