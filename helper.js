@@ -82,8 +82,8 @@ ssaHelper = function(kind){
              * assemble openshift variables...
              *
              */
-            var segmentUrl = 'http://segment-' + nodes['openshift']['oDomain'] +'.'+ nodes['_cDomain'] ;
-            var ridesUrl = 'http://rides-' + nodes['openshift']['oDomain'] +'.'+ nodes['_cDomain'];
+            var segmentUrl = 'http://segment-' + nodes['openshift']['_oDomain'] +'.'+ nodes['openshift']['_cDomain'] ;
+            var ridesUrl = 'http://rides-' + nodes['openshift']['_oDomain'] +'.'+ nodes['openshift']['_cDomain'];
             nodes["segment"] = segmentUrl;
             nodes["rides"] =  ridesUrl;
         }
