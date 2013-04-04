@@ -25,7 +25,7 @@
 */
 
 
-require('./helper.js'),
+require('./scripts/helper.js'),
 // make new node, and assign it the port associated with 'ipaddress' in nodes.json (for running locally)
 helper = new ssaHelper('ipaddress');
 
