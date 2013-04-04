@@ -58,9 +58,6 @@ This repo will modify the way the Strava API data streams appear and generally f
 
 If you don't have a **[redhat openshift](https://www.openshift.com)** account I highly recommmend you get one, they're free, and this repository is designed to run all nodes with very little configuration. 
 
-Once you have your redhat openshift account, you can fill in your details in nodes.json, and make modifications to the package.json to specify the 'runtime' script (normally server.js). Each keyname inside of 'local' (associated with a URL) will be used to assemble as a url when deploying to openshift.
-
-In addition modification of the nodes.json file can allow you to specify ports to run the node scripts in your local environment quickly. Launch each script and begin using the api. Each script has detail instructions for use.
 
 
 ##**Testing**
@@ -85,47 +82,6 @@ Testing is somewhat simple, for the time being and is dependent on the assert mo
 >**Local Configuration vs. 'Remotes'**
 
 nodes.json tells the various scripts what URLs to use based on what is available. If the openshift enviornment variables (which change quite frequently) are not available it will load whatever is contained within 'local'. This was intended to be quickly deployed locally and on openshift without having to ignore or modify files. When loading from local it will refer to port numbers to instansate the current node; as most local installations only have access to one ipaddress (typically). Any combination of local/remote urls and port numbers could potentially be used to defined a number of distributed setups. The URL's in local are used as api endpoints inside the nodes. 
-
->**Deploying to Openshift**
-
-Once you provide your openshift's account domain (nodes.openshift._oDomain), you can upload the entire repo, modify the package.json file to run a specified script to point to the script that you want your node to be (rides.js,segment.js or server.js) and away you go! When the scripts are run inside of the openshift enviornment it will automatically change the url references to point to openshift servers based on the keys inside of "local" (excluding ipaddress and _ports). 
-
->**Breakdown of Openshift node configuration**
-	
-	/* 
-	 *  Main server that talks to segment.js and rides.js
-	 *
-	 */
-	 
-	server.js		- 	http://<you pick>-<myappDomain>.rhcloud.com/
-	
-					package.json	-
-	
-									{ ..
-										"main": "server.js" 
-									}	
-					
-	/* 
-	 *  Supporting servers that talk to strava and server.js
-	 *
-	 */
-	
-	segment.js		-	http://segment-<myappDomain>.rhcloud.com/
-	
-					package.json	-
-									{ ..
-										"main": "segment.js" 
-									}	
-	
-	
-	rides.js		-	http://rides-<myappDomain>.rhcloud.com/
-	
-					package.json	-
-									{ ..
-										"main": "rides.js" 
-									}	
-	
-	
 
 >**Managing timeout values**
 
@@ -155,4 +111,38 @@ While currently most api calls have default values, I've implemented some option
 	            "_cDomain" : "rhcloud.com"
 	        }
 	}
+##** Helper bash Scripts**
+=================
 
+Inside the util/ directory are two scripts, one to generate a nodes.json configuration file and openshift_installer that will walk you through the process of creating an rhc cloud application using rhc client tools, and allow you to specify the version of node you'd like to use. More information is contained within the installer scripts.
+
+If a step fails along the way the script will exit. Sometimes openshifts servers don't behave properly so merely start over (or reboot the application you are deploying to).
+
+**Basic use openshift_installer.sh**
+
+	## prompts for all information
+	./openshift_installer.sh
+
+	## creates a master 'node' and prompts for application name
+	./openshift_installer.sh master
+
+	## creates a master 'node' as application name 'ssa'
+	./openshift_installer.sh master ssa
+
+	## creates a 'rides' node
+	./openshift_installer.sh rides
+	
+>These will put the new application repo inside of the same folder these are launched from
+
+**Basic use for nodes_config.sh**
+
+	## prompts you for local IP/port settings and cache timeout values
+	./nodes_config.sh nodes.json
+	## copy this file into your new node
+	cp nodes.json ssa/
+	## commit and push change
+	git add nodes.json
+	git commit -m 'Set nodes.json values' 
+	git push
+	
+>Creates a nodes.json in the same path as script
