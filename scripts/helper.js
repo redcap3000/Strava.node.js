@@ -39,7 +39,7 @@
 ssaHelper = function(kind){
     var express = require('express'),request = require('request')
     , self = this;
-    nodes = require('./nodes.json');
+    nodes = require('./../nodes.json');
     self.populateCache = function() {
         if (typeof self.zcache === "undefined") {
         	self.zcache = {};
