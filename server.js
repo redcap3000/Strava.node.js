@@ -23,7 +23,7 @@
     
 */
 
-require('./helper.js');
+require('./scripts/helper.js');
 
 helper = new ssaHelper('rides');
 
