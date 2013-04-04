@@ -111,7 +111,7 @@ While currently most api calls have default values, I've implemented some option
 	            "_cDomain" : "rhcloud.com"
 	        }
 	}
-##** Helper bash Scripts**
+##**Helper bash Scripts**
 =================
 
 Inside the util/ directory are two scripts, one to generate a nodes.json configuration file and openshift_installer that will walk you through the process of creating an rhc cloud application using rhc client tools, and allow you to specify the version of node you'd like to use. More information is contained within the installer scripts.
