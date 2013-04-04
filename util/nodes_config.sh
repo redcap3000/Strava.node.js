@@ -117,3 +117,13 @@ echo '{ "local":{
 }
 }
 '> "$filename"
+
+echo '
+********
+Success nodes.json created!
+Move the new nodes.json file into the appropriate repo
+git add nodes.json && git commit -m "Configured Nodes" && git push
+********
+'
+
+

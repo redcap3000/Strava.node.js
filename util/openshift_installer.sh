@@ -66,6 +66,26 @@ clear
 
 echo -n '**********
 Welcome to the Strava.nodes.js Openshift Helper Script
+Ronaldo Barbachano March 2013
+
+**This script will**
+
+    1) Create a redhat cloud app using rhc of a Strava.node.js node (segment/rides/master)
+    2) Allow for installation of any version of Node.js (optional)
+
+**This script will NOT**
+
+    1) Make /edit your nodes.json (use nodes_config.sh)
+    2) Push your first commit - you can do that!
+    
+This script was ONLY tested using MacOSX Client Tools but -should- work anywhere
+rhc client tools and git are available.
+
+**Requirements**
+
+    1) rhc client tools (duh)
+    2) Git (No idea how you got rhc client tools if you have git)
+    
 *********
 
 
@@ -77,7 +97,7 @@ if [ "$1" == '' ]; then
     while [ -z $rhc_name ]
     do
         echo -n 'What node server would you like to create? (master/rides/segment)?
-    '
+'
         read rhc_name
     done
 elif [ "$1" == 'master' ] || [ "$1" == 'rides' ] || [ "$1" == 'segment' ]; then
@@ -86,11 +106,12 @@ elif [ "$1" == 'master' ] || [ "$1" == 'rides' ] || [ "$1" == 'segment' ]; then
 else
     echo 'Invalid argument.
     Did you mean?
-    openshift.sh master
-    openshift.sh master <name>
-    openshift.sh rides
-    openshift.sh segment
-    '
+        ./openshift_installer
+                                master
+                                master <name>
+                                rides
+                                segment
+'
 fi
 ## could glean this from rhc stuff..
 if [ "$rhc_name" == 'master' ] || [ "$rhc_name" == 'segment' ] || [ "$rhc_name" == 'rides' ]; then
@@ -131,7 +152,8 @@ if [ "$rhc_name" == 'master' ] || [ "$rhc_name" == 'segment' ] || [ "$rhc_name" 
     do
         echo -n 'Would you like to install a custom version of Node.js? 
      This will increase your next push time
-    (y/n)'
+    (y/n)
+'
         read custom_nodejs
     done
 
@@ -140,7 +162,7 @@ if [ "$rhc_name" == 'master' ] || [ "$rhc_name" == 'segment' ] || [ "$rhc_name" 
         while [ -z $node_version ]
         do
             echo -n 'Please enter a valid version of node (0.10.3)
-    '
+'
             read node_version
         done
         ## probably change this branch name to something other than 'upstream'
@@ -155,14 +177,12 @@ if [ "$rhc_name" == 'master' ] || [ "$rhc_name" == 'segment' ] || [ "$rhc_name" 
         git commit -m 'use custom Node version '
         exitStatus $?
     fi
-
     ## Add Strava.node.js Repo (not sure about the -m flag)
     git remote add Strava.node.js -m $rhc_name https://github.com/redcap3000/Strava.node.js.git
     exitStatus $?
     ## Get 'app' branch from Strava.node.js
     git pull -s recursive -X theirs Strava.node.js $rhc_name
     exitStatus $?
-
     ## Done
     echo '
     ********
