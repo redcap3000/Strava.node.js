@@ -38,7 +38,6 @@
 ##  rides/segment nodes otherwise its only used for cache settings which
 ##  need to be configured individually.
 ##
-
 function exitStatus {
 ## used to end program flow if specific tasks (commands) fail
     if [ "$1" != 0 ]; then
@@ -57,6 +56,7 @@ function dirCheck {
         echo 'A directory with the same name as the app already exists, please remove it.'
         exit
     fi
+
 }
 
 ## openshift NODE_TYPE
@@ -67,6 +67,7 @@ clear
 echo -n '**********
 Welcome to the Strava.nodes.js Openshift Helper Script
 *********
+
 
 
 '
@@ -161,40 +162,15 @@ if [ "$rhc_name" == 'master' ] || [ "$rhc_name" == 'segment' ] || [ "$rhc_name" 
     ## Get 'app' branch from Strava.node.js
     git pull -s recursive -X theirs Strava.node.js $rhc_name
     exitStatus $?
-    ## Build JSON ... do this a tad better..
-    if [ "$rhc_name" == 'master' ]; then
-        rhc_domain=
-        while [ -z $rhc_domain ]
-        do
-            echo -n 'rhcloud domain for segment and ride nodes? <http://rides-<AccountName>.rhcloud.com>
-        '
-            read rhc_domain
-        done
-        echo '{   "local":{
-                "ipaddress" : "192.168.0.198",
-                "segment" : "http://192.168.0.198:8081",
-                "rides" : "http://192.168.0.198:8082",
-                "_ports" : {"ipaddress" : 8080, "segment": 8081,"rides":8082},
-                "_timeouts" : {"athlete+rides_offset":3600,"efforts_timeout":25200,"club_segment":3600,"segment":1800}
-            },
-            "openshift":
-            {
-                "_oDomain" : "'$rhc_domain'",
-                "_cDomain" : "rhcloud.com"
-            }
-        }
-        '> nodes.json
-        git add '/nodes.json'
-        exitStatus $?
-    fi
-    
-    git push
-    exitStatus $?
 
-    ## Done??
+    ## Done
     echo '
     ********
     Success!
+    Next generate the nodes.json with nodes_config.sh or edit nodes.json
+    You only need to make one nodes.json - which may be deployed across all nodes
+    
+    git add nodes.json && git commit -m "Configured Nodes" && git push
     ********
     '
 fi
